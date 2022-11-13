@@ -1,0 +1,6 @@
+C:\Users\Даниил\source\repos\testerSharp\testerSharp\obj\Debug\testerSharp.csproj.CoreCompileInputs.cache
+C:\Users\Даниил\source\repos\testerSharp\testerSharp\bin\Debug\testerSharp.exe.config
+C:\Users\Даниил\source\repos\testerSharp\testerSharp\bin\Debug\testerSharp.exe
+C:\Users\Даниил\source\repos\testerSharp\testerSharp\bin\Debug\testerSharp.pdb
+C:\Users\Даниил\source\repos\testerSharp\testerSharp\obj\Debug\testerSharp.exe
+C:\Users\Даниил\source\repos\testerSharp\testerSharp\obj\Debug\testerSharp.pdb
