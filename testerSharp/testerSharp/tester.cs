@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 public static class ListExtras
 {
     public static List<T> Resize<T>(this List<T> list, int size, T element = default(T)) // добавление метода Resize для контейнера List, является подобием одноименной функции в c++
