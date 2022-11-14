@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public static class ListExtras
 {
@@ -111,6 +114,19 @@ namespace testerSharp
                     }
                     if (choose == '4')
                     {
+                        int choice = 0;
+                        Console.WriteLine("Сохранить игроков текущей сессии?\n1.Да\n2.Нет");
+                        choice = Convert.ToInt32(Console.ReadLine());
+                        if (choice == 1)
+                        {
+                            string fileName = "Players.json";
+                            string jsonInfo = JsonSerializer.Serialize(theGame.players);
+                            File.WriteAllText(fileName, jsonInfo);
+                            Console.WriteLine("Данные успешно сохранены!");
+                            FileInfo file = new FileInfo(fileName);
+                            string text = Convert.ToString(file.Directory);
+                            System.Threading.Thread.Sleep(6000);
+                        }
                         System.Environment.Exit(0);
                     }
                 }
