@@ -8,6 +8,16 @@ namespace testerSharp
 {
     public class ThinkingPlayer : Player
     {
+        public ThinkingPlayer() 
+        {
+
+        }
+        public ThinkingPlayer(string name, char symbol, bool check)
+        {
+            playername = name;
+            playersign = symbol;
+            IsRobot = check;
+        }
         override public Tuple<int, int> makeMove(int border, ref Desk desk) // алгоритм игры для игрока-человека
         {
             Console.WriteLine("Выберите вид хода: 1 - Доверить свой ход алгоритму,  2 - Ходить самому");

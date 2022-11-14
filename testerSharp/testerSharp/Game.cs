@@ -10,11 +10,23 @@ namespace testerSharp
     {
         private Desk gameDesk; // игровое поле
         private int robotsNumber; // количество ИИ
-        private int playerNumber; // количество игроков-людей
-        public List<Player> players; // список всех игроков
+        public int playerNumber; // количество игроков-людей
+        private List<Player> players { get; set; } // список всех игроков
         private int moveNumber; // кол-во ходов
         private bool winner = false; // переменная, определяющая, есть ли победитель
         private List<char> SIGNS = new List<char>() { 'x', 'o', '#', '$', '%' }; // список всех символов
+        public List<Player> Players
+        {
+            get
+            {
+                return players;
+            }
+            set
+            {
+                if (value.Count > 0)
+                    players = value;
+            }
+        }
         public Desk GameDesk // свойства для gameDesk
         {
             get
@@ -91,11 +103,11 @@ namespace testerSharp
             {
                 if (players[i].playername == name)
                 {
-                    players[i] = null;
                     playerNumber--;
                     checker = 1;
-                    for (; i < playerNumber; i++)
-                        players[i] = players[i + 1];
+                    players.RemoveAt(i);
+                    /*for (; i < playerNumber; i++)
+                        players[i] = players[i + 1];*/
                 }
             }
             if (checker == 1) Console.WriteLine("Удаление прошло успешно!");
@@ -127,6 +139,7 @@ namespace testerSharp
                     players.Insert(i, new ThinkingPlayer());
                     players[i].playername = name;
                     players[i].playersign = symbol;
+                    players[i].IsRobot = false;
                     break;
                 }
             }
@@ -139,6 +152,7 @@ namespace testerSharp
                 players.Add(new RandomPLayer());
                 players[i].playername = "Player" + Convert.ToString(i);
                 players[i].playersign = SIGNS[0];
+                players[i].IsRobot = true;
                 delSymbol(SIGNS[0]);
             }
         }

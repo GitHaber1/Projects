@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public static class ListExtras
 {
@@ -35,53 +38,94 @@ namespace testerSharp
 {
     class Program
     {
-        public void startGame() // функция, в которой начинается игра
+        public void startGame(bool firstTime) // функция, в которой начинается игра
         {
+            int choice = 0;
+            string fileName = "Players.json";
             Game theGame = new Game();
             char number;
             int playerNumber;
-            Console.WriteLine("Введите число игроков (от 2 до 5): ");
-            number = Convert.ToChar(Console.ReadLine());
-            if (Char.IsDigit(number))
+            if (firstTime)
             {
-                playerNumber = (int)number - 48;
-                if (2 > playerNumber || playerNumber > 5)
+                Console.WriteLine("Загрузить сохраненных игроков?\n1.Да\n2.Нет");
+                choice = Convert.ToInt32(Console.ReadLine());
+            }
+            if (choice == 1 && firstTime)
+            {
+                string jsonInfo = File.ReadAllText(fileName);
+                theGame.Players = JsonSerializer.Deserialize<List<Player>>(jsonInfo);
+                theGame.playerNumber = theGame.Players.Count;
+                for (int i = 0; i < theGame.playerNumber; i++)
+                {
+                    if (theGame.Players[i].IsRobot == false)
+                    {
+                        theGame.Players[i] = new ThinkingPlayer(theGame.Players[i].playername, theGame.Players[i].playersign, theGame.Players[i].IsRobot);
+                    }
+                    else
+                    {
+                        theGame.Players[i] = new RandomPLayer(theGame.Players[i].playername, theGame.Players[i].playersign, theGame.Players[i].IsRobot);
+                    }
+                }
+                if (theGame.playerNumber <= 1)
+                {
+                    Console.WriteLine("Слишком мало игроков для игры!");
+                    firstTime = false;
+                    startGame(firstTime);
+                }
+                else
+                {
+                    theGame.newGame();
+                    while (!theGame.Winner)
+                        theGame.MakeMove();
+                }
+                firstTime = false;                
+            }
+            else
+            {
+                Console.WriteLine("Введите число игроков (от 2 до 5): ");
+                number = Convert.ToChar(Console.ReadLine());
+                if (Char.IsDigit(number))
+                {
+                    playerNumber = (int)number - 48;
+                    if (2 > playerNumber || playerNumber > 5)
+                    {
+                        Console.WriteLine("Введено некорректное значение, по умолчанию выставлено значение 2!");
+                        playerNumber = 2;
+                    }
+                }
+                else
                 {
                     Console.WriteLine("Введено некорректное значение, по умолчанию выставлено значение 2!");
                     playerNumber = 2;
                 }
-            }
-            else
-            {
-                Console.WriteLine("Введено некорректное значение, по умолчанию выставлено значение 2!");
-                playerNumber = 2;
-            }
-            char people;
-            int peoplePlayers;
-            Console.WriteLine("Введите число игроков-людей (1-4): ");
-            people = Convert.ToChar(Console.ReadLine());
-            if (char.IsDigit(people))
-            {
-                peoplePlayers = (int)people - 48;
-                if (1 > peoplePlayers || peoplePlayers > 4)
+                char people;
+                int peoplePlayers;
+                Console.WriteLine("Введите число игроков-людей (1-4): ");
+                people = Convert.ToChar(Console.ReadLine());
+                if (char.IsDigit(people))
+                {
+                    peoplePlayers = (int)people - 48;
+                    if (1 > peoplePlayers || peoplePlayers > 4)
+                    {
+                        Console.WriteLine("Введено некорректное число, по умолчанию выставлено значение 1!");
+                        peoplePlayers = 1;
+                    }
+                }
+                else
                 {
                     Console.WriteLine("Введено некорректное число, по умолчанию выставлено значение 1!");
                     peoplePlayers = 1;
                 }
-            }
-            else
-            {
-                Console.WriteLine("Введено некорректное число, по умолчанию выставлено значение 1!");
-                peoplePlayers = 1;
-            }
-            theGame.createDesk(playerNumber, peoplePlayers);
-            theGame.addThinkingPlayer();
-            theGame.AddRandomPlayer(playerNumber);
-            Console.WriteLine("Игра начинается!");
-            while (!(theGame.Winner))
-            {
-                theGame.MakeMove();
-            }
+                theGame.createDesk(playerNumber, peoplePlayers);
+                theGame.addThinkingPlayer();
+                theGame.AddRandomPlayer(playerNumber);
+                Console.WriteLine("Игра начинается!");
+                while (!(theGame.Winner))
+                {
+                    theGame.MakeMove();
+                }
+                firstTime = false;
+            }            
             while (true)
             {
                 char choose;
@@ -99,7 +143,7 @@ namespace testerSharp
                     {
                         theGame = null;
                         theGame = new Game();
-                        startGame();
+                        startGame(firstTime);
                     }
                     if (choose == '3')
                     {
@@ -111,6 +155,16 @@ namespace testerSharp
                     }
                     if (choose == '4')
                     {
+                        choice = 0;
+                        Console.WriteLine("Сохранить игроков текущей сессии?\n1.Да\n2.Нет");
+                        choice = Convert.ToInt32(Console.ReadLine());
+                        if (choice == 1)
+                        {
+                            string jsonInfo = JsonSerializer.Serialize(theGame.Players);
+                            File.WriteAllText(fileName, jsonInfo);
+                            Console.WriteLine("Данные успешно сохранены!");
+                            System.Threading.Thread.Sleep(6000);
+                        }
                         System.Environment.Exit(0);
                     }
                 }
@@ -124,9 +178,10 @@ namespace testerSharp
         {
             Random rand = new Random((int)DateTime.Now.Ticks);
             Program p = new Program();
+            bool firstTime = true;
             try
             {
-                p.startGame();
+                p.startGame(firstTime);
             }
             catch (Exception err)
             {
