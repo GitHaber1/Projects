@@ -11,7 +11,7 @@ namespace testerSharp
         protected string player; // имя игрока
         protected char sign; // знак, который игрок рисует при своем ходе
         protected bool isRobot; // индикатор, который показывает, является ли игрок ИИ
-        public bool IsRobot
+        public bool IsRobot // свойства для isRobot (проверка не требуется)
         {
             get
             {

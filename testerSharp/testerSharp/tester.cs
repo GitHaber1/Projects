@@ -53,7 +53,7 @@ namespace testerSharp
             if (choice == 1 && firstTime)
             {
                 string jsonInfo = File.ReadAllText(fileName);
-                theGame.Players = JsonSerializer.Deserialize<List<Player>>(jsonInfo);
+                theGame.Players = JsonSerializer.Deserialize<List<Player>>(jsonInfo); // десериализация
                 theGame.playerNumber = theGame.Players.Count;
                 for (int i = 0; i < theGame.playerNumber; i++)
                 {
@@ -160,8 +160,8 @@ namespace testerSharp
                         choice = Convert.ToInt32(Console.ReadLine());
                         if (choice == 1)
                         {
-                            string jsonInfo = JsonSerializer.Serialize(theGame.Players);
-                            File.WriteAllText(fileName, jsonInfo);
+                            string jsonInfo = JsonSerializer.Serialize(theGame.Players); // сериализация
+                            File.WriteAllText(fileName, jsonInfo); // сохранение списка игроков
                             Console.WriteLine("Данные успешно сохранены!");
                             System.Threading.Thread.Sleep(6000);
                         }

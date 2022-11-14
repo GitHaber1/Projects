@@ -15,7 +15,7 @@ namespace testerSharp
         private int moveNumber; // кол-во ходов
         private bool winner = false; // переменная, определяющая, есть ли победитель
         private List<char> SIGNS = new List<char>() { 'x', 'o', '#', '$', '%' }; // список всех символов
-        public List<Player> Players
+        public List<Player> Players // свойства для players (проверка не требуется)
         {
             get
             {
@@ -106,8 +106,6 @@ namespace testerSharp
                     playerNumber--;
                     checker = 1;
                     players.RemoveAt(i);
-                    /*for (; i < playerNumber; i++)
-                        players[i] = players[i + 1];*/
                 }
             }
             if (checker == 1) Console.WriteLine("Удаление прошло успешно!");

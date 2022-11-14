@@ -8,11 +8,11 @@ namespace testerSharp
 {
     public class RandomPLayer : Player
     {
-        public RandomPLayer()
+        public RandomPLayer() // конструктор по умолчанию
         {
 
         }
-        public RandomPLayer(string name, char symbol, bool check)
+        public RandomPLayer(string name, char symbol, bool check) // конструктор с параметрами 
         {
             playername = name;
             playersign = symbol;

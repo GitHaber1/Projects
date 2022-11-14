@@ -8,11 +8,11 @@ namespace testerSharp
 {
     public class ThinkingPlayer : Player
     {
-        public ThinkingPlayer() 
+        public ThinkingPlayer() // конструктор по умолчанию
         {
 
         }
-        public ThinkingPlayer(string name, char symbol, bool check)
+        public ThinkingPlayer(string name, char symbol, bool check) // конструктор с параметрами
         {
             playername = name;
             playersign = symbol;
