@@ -103,11 +103,11 @@ namespace testerSharp
             {
                 if (players[i].playername == name)
                 {
-                    players[i] = null;
                     playerNumber--;
                     checker = 1;
-                    for (; i < playerNumber; i++)
-                        players[i] = players[i + 1];
+                    players.RemoveAt(i);
+                    /*for (; i < playerNumber; i++)
+                        players[i] = players[i + 1];*/
                 }
             }
             if (checker == 1) Console.WriteLine("Удаление прошло успешно!");
@@ -139,6 +139,7 @@ namespace testerSharp
                     players.Insert(i, new ThinkingPlayer());
                     players[i].playername = name;
                     players[i].playersign = symbol;
+                    players[i].IsRobot = false;
                     break;
                 }
             }
@@ -151,6 +152,7 @@ namespace testerSharp
                 players.Add(new RandomPLayer());
                 players[i].playername = "Player" + Convert.ToString(i);
                 players[i].playersign = SIGNS[0];
+                players[i].IsRobot = true;
                 delSymbol(SIGNS[0]);
             }
         }

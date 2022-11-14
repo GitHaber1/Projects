@@ -38,23 +38,39 @@ namespace testerSharp
 {
     class Program
     {
-        public void startGame() // функция, в которой начинается игра
+        public void startGame(bool firstTime) // функция, в которой начинается игра
         {
             int choice = 0;
             string fileName = "Players.json";
             Game theGame = new Game();
             char number;
             int playerNumber;
-            Console.WriteLine("Загрузить сохраненных игроков?\n1.Да\n2.Нет");
-            choice = Convert.ToInt32(Console.ReadLine());
-            if (choice == 1)
+            if (firstTime)
+            {
+                Console.WriteLine("Загрузить сохраненных игроков?\n1.Да\n2.Нет");
+                choice = Convert.ToInt32(Console.ReadLine());
+            }
+            if (choice == 1 && firstTime)
             {
                 string jsonInfo = File.ReadAllText(fileName);
                 theGame.Players = JsonSerializer.Deserialize<List<Player>>(jsonInfo);
                 theGame.playerNumber = theGame.Players.Count;
+                for (int i = 0; i < theGame.playerNumber; i++)
+                {
+                    if (theGame.Players[i].IsRobot == false)
+                    {
+                        theGame.Players[i] = new ThinkingPlayer(theGame.Players[i].playername, theGame.Players[i].playersign, theGame.Players[i].IsRobot);
+                    }
+                    else
+                    {
+                        theGame.Players[i] = new RandomPLayer(theGame.Players[i].playername, theGame.Players[i].playersign, theGame.Players[i].IsRobot);
+                    }
+                }
                 if (theGame.playerNumber <= 1)
                 {
-                    Console.WriteLine("Слишком мало игроков!");
+                    Console.WriteLine("Слишком мало игроков для игры!");
+                    firstTime = false;
+                    startGame(firstTime);
                 }
                 else
                 {
@@ -62,6 +78,7 @@ namespace testerSharp
                     while (!theGame.Winner)
                         theGame.MakeMove();
                 }
+                firstTime = false;                
             }
             else
             {
@@ -107,6 +124,7 @@ namespace testerSharp
                 {
                     theGame.MakeMove();
                 }
+                firstTime = false;
             }            
             while (true)
             {
@@ -125,7 +143,7 @@ namespace testerSharp
                     {
                         theGame = null;
                         theGame = new Game();
-                        startGame();
+                        startGame(firstTime);
                     }
                     if (choose == '3')
                     {
@@ -160,9 +178,10 @@ namespace testerSharp
         {
             Random rand = new Random((int)DateTime.Now.Ticks);
             Program p = new Program();
+            bool firstTime = true;
             try
             {
-                p.startGame();
+                p.startGame(firstTime);
             }
             catch (Exception err)
             {

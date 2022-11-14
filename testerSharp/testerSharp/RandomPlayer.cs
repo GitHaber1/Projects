@@ -8,6 +8,16 @@ namespace testerSharp
 {
     public class RandomPLayer : Player
     {
+        public RandomPLayer()
+        {
+
+        }
+        public RandomPLayer(string name, char symbol, bool check)
+        {
+            playername = name;
+            playersign = symbol;
+            IsRobot = check;
+        }
         override public Tuple<int, int> makeMove(int border, ref Desk desk) // алгоритм игры для ИИ 
         {
             var rand = new Random();
