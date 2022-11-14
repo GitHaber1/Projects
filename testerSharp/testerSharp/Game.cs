@@ -10,11 +10,23 @@ namespace testerSharp
     {
         private Desk gameDesk; // игровое поле
         private int robotsNumber; // количество ИИ
-        private int playerNumber; // количество игроков-людей
-        public List<Player> players; // список всех игроков
+        public int playerNumber; // количество игроков-людей
+        private List<Player> players { get; set; } // список всех игроков
         private int moveNumber; // кол-во ходов
         private bool winner = false; // переменная, определяющая, есть ли победитель
         private List<char> SIGNS = new List<char>() { 'x', 'o', '#', '$', '%' }; // список всех символов
+        public List<Player> Players
+        {
+            get
+            {
+                return players;
+            }
+            set
+            {
+                if (value.Count > 0)
+                    players = value;
+            }
+        }
         public Desk GameDesk // свойства для gameDesk
         {
             get

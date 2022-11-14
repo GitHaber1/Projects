@@ -40,51 +40,74 @@ namespace testerSharp
     {
         public void startGame() // функция, в которой начинается игра
         {
+            int choice = 0;
+            string fileName = "Players.json";
             Game theGame = new Game();
             char number;
             int playerNumber;
-            Console.WriteLine("Введите число игроков (от 2 до 5): ");
-            number = Convert.ToChar(Console.ReadLine());
-            if (Char.IsDigit(number))
+            Console.WriteLine("Загрузить сохраненных игроков?\n1.Да\n2.Нет");
+            choice = Convert.ToInt32(Console.ReadLine());
+            if (choice == 1)
             {
-                playerNumber = (int)number - 48;
-                if (2 > playerNumber || playerNumber > 5)
+                string jsonInfo = File.ReadAllText(fileName);
+                theGame.Players = JsonSerializer.Deserialize<List<Player>>(jsonInfo);
+                theGame.playerNumber = theGame.Players.Count;
+                if (theGame.playerNumber <= 1)
+                {
+                    Console.WriteLine("Слишком мало игроков!");
+                }
+                else
+                {
+                    theGame.newGame();
+                    while (!theGame.Winner)
+                        theGame.MakeMove();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Введите число игроков (от 2 до 5): ");
+                number = Convert.ToChar(Console.ReadLine());
+                if (Char.IsDigit(number))
+                {
+                    playerNumber = (int)number - 48;
+                    if (2 > playerNumber || playerNumber > 5)
+                    {
+                        Console.WriteLine("Введено некорректное значение, по умолчанию выставлено значение 2!");
+                        playerNumber = 2;
+                    }
+                }
+                else
                 {
                     Console.WriteLine("Введено некорректное значение, по умолчанию выставлено значение 2!");
                     playerNumber = 2;
                 }
-            }
-            else
-            {
-                Console.WriteLine("Введено некорректное значение, по умолчанию выставлено значение 2!");
-                playerNumber = 2;
-            }
-            char people;
-            int peoplePlayers;
-            Console.WriteLine("Введите число игроков-людей (1-4): ");
-            people = Convert.ToChar(Console.ReadLine());
-            if (char.IsDigit(people))
-            {
-                peoplePlayers = (int)people - 48;
-                if (1 > peoplePlayers || peoplePlayers > 4)
+                char people;
+                int peoplePlayers;
+                Console.WriteLine("Введите число игроков-людей (1-4): ");
+                people = Convert.ToChar(Console.ReadLine());
+                if (char.IsDigit(people))
+                {
+                    peoplePlayers = (int)people - 48;
+                    if (1 > peoplePlayers || peoplePlayers > 4)
+                    {
+                        Console.WriteLine("Введено некорректное число, по умолчанию выставлено значение 1!");
+                        peoplePlayers = 1;
+                    }
+                }
+                else
                 {
                     Console.WriteLine("Введено некорректное число, по умолчанию выставлено значение 1!");
                     peoplePlayers = 1;
                 }
-            }
-            else
-            {
-                Console.WriteLine("Введено некорректное число, по умолчанию выставлено значение 1!");
-                peoplePlayers = 1;
-            }
-            theGame.createDesk(playerNumber, peoplePlayers);
-            theGame.addThinkingPlayer();
-            theGame.AddRandomPlayer(playerNumber);
-            Console.WriteLine("Игра начинается!");
-            while (!(theGame.Winner))
-            {
-                theGame.MakeMove();
-            }
+                theGame.createDesk(playerNumber, peoplePlayers);
+                theGame.addThinkingPlayer();
+                theGame.AddRandomPlayer(playerNumber);
+                Console.WriteLine("Игра начинается!");
+                while (!(theGame.Winner))
+                {
+                    theGame.MakeMove();
+                }
+            }            
             while (true)
             {
                 char choose;
@@ -114,17 +137,14 @@ namespace testerSharp
                     }
                     if (choose == '4')
                     {
-                        int choice = 0;
+                        choice = 0;
                         Console.WriteLine("Сохранить игроков текущей сессии?\n1.Да\n2.Нет");
                         choice = Convert.ToInt32(Console.ReadLine());
                         if (choice == 1)
                         {
-                            string fileName = "Players.json";
-                            string jsonInfo = JsonSerializer.Serialize(theGame.players);
+                            string jsonInfo = JsonSerializer.Serialize(theGame.Players);
                             File.WriteAllText(fileName, jsonInfo);
                             Console.WriteLine("Данные успешно сохранены!");
-                            FileInfo file = new FileInfo(fileName);
-                            string text = Convert.ToString(file.Directory);
                             System.Threading.Thread.Sleep(6000);
                         }
                         System.Environment.Exit(0);
